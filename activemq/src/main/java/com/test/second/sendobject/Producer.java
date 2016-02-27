@@ -1,17 +1,15 @@
 /**
- * Site reffered 
- * http://www.coderpanda.com/jms-example-using-apache-activemq/
+ * link reffered : http://www.coderpanda.com/jms-tutorial-sending-object-as-message-in-jms/
  */
-
-package com.test.first.queue;
+package com.test.second.sendobject;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -21,7 +19,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  * @author Deepak.Keswani
  *
  */
-public class Sender {
+public class Producer {
 
 	private ConnectionFactory factory = null;
 	private Connection connection = null;
@@ -32,6 +30,11 @@ public class Sender {
 
 	private MessageProducer producer = null;
 
+	public static void main(String args[]) {
+		Producer sender = new Producer();
+		sender.sendMessage();
+	}	
+
 	public void sendMessage() {
 		try {
 			factory = new ActiveMQConnectionFactory(
@@ -41,10 +44,15 @@ public class Sender {
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			destination = session.createQueue("SAMPLEQUEUE");
 			producer = session.createProducer(destination);
-			TextMessage message = session.createTextMessage();
-			message.setText("Hello ...This is a sample message..sending from FirstClient");
-			producer.send(message);
-			System.out.println("Sent: " + message.getText());
+			EventMessage eventMessage = new EventMessage(1,"Send event object");
+			//TextMessage message = session.createTextMessage();
+			ObjectMessage objectMessage =  session.createObjectMessage(eventMessage);
+			//message.setText("Hello ...This is a sample message..sending from FirstClient");
+			objectMessage.setObject(eventMessage);
+			//producer.send(message);
+			producer.send(objectMessage);
+			//System.out.println("Sent: " + message.getText());
+			System.out.println("Sent: ");
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,9 +67,5 @@ public class Sender {
 		}
 	}
 
-	public static void main(String args[]) {
-		Sender sender = new Sender();
-		sender.sendMessage();
-	}
-
+	
 }
