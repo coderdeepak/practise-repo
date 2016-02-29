@@ -1,4 +1,4 @@
-package com.test.second.sendobject;
+package com.test.common;
 
 import java.io.Serializable;
 

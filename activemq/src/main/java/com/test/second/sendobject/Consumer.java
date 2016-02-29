@@ -12,6 +12,8 @@ import javax.jms.Session;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import com.test.common.EventMessage;
+
 public class Consumer {
 	private ConnectionFactory factory = null;
 	private Connection connection = null;
